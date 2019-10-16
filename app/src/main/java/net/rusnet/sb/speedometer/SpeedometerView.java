@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 
 public class SpeedometerView extends View {
 
+    public static final int SPEEDOMETER_SIZE = 700;
     public static final float CIRCLE_PAINT_STROKE_WIDTH = 128f;
     public static final float START_ANGLE = 135;
     public static final float TOTAL_ANGLE = 270;
@@ -24,6 +25,7 @@ public class SpeedometerView extends View {
     public static final float ARROW_STROKE_WIDTH = 10f;
     public static final float SPEED_TEXT_Y_POSITION_RATIO = 9/10f;
 
+    //default values
     public static final int LOW_SPEED = 60;
     public static final int MID_SPEED = 120;
     public static final int MAX_SPEED = 180;
@@ -48,7 +50,7 @@ public class SpeedometerView extends View {
     private Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mArrowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    private RectF mSpeedometerRect = new RectF(0, 0, 700, 700);
+    private RectF mSpeedometerRect = new RectF(0, 0, SPEEDOMETER_SIZE, SPEEDOMETER_SIZE);
     private Rect mTextBounds = new Rect();
 
     public SpeedometerView(Context context) {
@@ -59,6 +61,45 @@ public class SpeedometerView extends View {
     public SpeedometerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
+    }
+
+    public void setMaxSpeed(int maxSpeed) {
+        mMaxSpeed = maxSpeed;
+        invalidate();
+    }
+
+    public void setLowSpeedColor(int lowSpeedColor) {
+        mLowSpeedColor = lowSpeedColor;
+        invalidate();
+    }
+
+    public void setMidSpeedColor(int midSpeedColor) {
+        mMidSpeedColor = midSpeedColor;
+        invalidate();
+    }
+
+    public void setMaxSpeedColor(int maxSpeedColor) {
+        mMaxSpeedColor = maxSpeedColor;
+        invalidate();
+    }
+
+    public void setArrowColor(int arrowColor) {
+        mArrowColor = arrowColor;
+        invalidate();
+    }
+
+    public void setCurrentSpeed(int currentSpeed) {
+        mCurrentSpeed = currentSpeed;
+        invalidate();
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        drawSpeedometerScale(canvas);
+        drawSpeedometerText(canvas);
+        drawSpeedometerArrow(canvas);
     }
 
     private void init(Context context, AttributeSet attrs) {
@@ -108,15 +149,6 @@ public class SpeedometerView extends View {
         mArrowPaint.setStrokeWidth(ARROW_STROKE_WIDTH);
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-
-        drawSpeedometerScale(canvas);
-        drawSpeedometerText(canvas);
-        drawSpeedometerArrow(canvas);
-    }
-
     private void drawSpeedometerArrow(Canvas canvas) {
         float centerX = mSpeedometerRect.width() / 2f;
         float centerY = mSpeedometerRect.height() / 2f;
@@ -146,35 +178,5 @@ public class SpeedometerView extends View {
         mSpeedometerPaint.setColor(color);
         canvas.drawArc(mSpeedometerRect,
         START_ANGLE + (TOTAL_ANGLE/mMaxSpeed*previousSpeed), (TOTAL_ANGLE/mMaxSpeed*(nextSpeed - previousSpeed)), false, mSpeedometerPaint);
-    }
-
-    public void setMaxSpeed(int maxSpeed) {
-        mMaxSpeed = maxSpeed;
-        invalidate();
-    }
-
-    public void setLowSpeedColor(int lowSpeedColor) {
-        mLowSpeedColor = lowSpeedColor;
-        invalidate();
-    }
-
-    public void setMidSpeedColor(int midSpeedColor) {
-        mMidSpeedColor = midSpeedColor;
-        invalidate();
-    }
-
-    public void setMaxSpeedColor(int maxSpeedColor) {
-        mMaxSpeedColor = maxSpeedColor;
-        invalidate();
-    }
-
-    public void setArrowColor(int arrowColor) {
-        mArrowColor = arrowColor;
-        invalidate();
-    }
-
-    public void setCurrentSpeed(int currentSpeed) {
-        mCurrentSpeed = currentSpeed;
-        invalidate();
     }
 }
